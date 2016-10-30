@@ -26,21 +26,20 @@ Method returning the filtered probabilities of the states.
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
+sp500 = sp500[1:1000]
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
  
 # compute the filtered state probabilities
 Pstate  = MSGARCH::Pstate(object = fit)
 
 plot(Pstate)
-}
 }
 

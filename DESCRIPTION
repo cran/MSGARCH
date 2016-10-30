@@ -1,13 +1,13 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 0.16
-Date: 2016-08-25
+Version: 0.17
+Date: 2016-10-01
 Authors@R: c(person("Keven", "Bluteau", role = c("aut", "cre"),
              email = "Keven.Bluteau@unine.ch"),
              person("David", "Ardia", role = c("aut"),
              email = "David.Ardia@unine.ch"),
-             person("Denis-Alexandre", "Trottier", role = c("ctb"),
+             person("Denis-Alexandre", "Trottier", role = c("aut"),
              email = "denis-alexandre.trottier.1@ulaval.ca"),
              person("Kris", "Boudt", role = c("ctb"),
              email = "kris.boudt@vub.ac.be"),
@@ -15,18 +15,17 @@ Authors@R: c(person("Keven", "Bluteau", role = c("aut", "cre"),
              email = "brian@braverock.com"))
 Author: Keven Bluteau [aut, cre],
     David Ardia [aut],
-    Denis-Alexandre Trottier [ctb],
+    Denis-Alexandre Trottier [aut],
     Kris Boudt [ctb],
     Brian Peterson [ctb]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
-Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or Bayesian), simulate, and forecast
-    various Markov-Switching GARCH processes.
+Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or Bayesian), simulate, and forecast various Markov-Switching GARCH processes.
 License: GPL (>= 2)
 Imports: Rcpp, adaptMCMC, DEoptim, nloptr, methods, stringr, ggplot2,
-        reshape2, zoo, expm, fanplot
+        reshape2, zoo, expm, fanplot, dfoptim
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 5.0.1
 NeedsCompilation: yes
-Packaged: 2016-08-25 11:36:57 UTC; bluteauk
+Packaged: 2016-10-29 20:49:03 UTC; Keven
 Repository: CRAN
-Date/Publication: 2016-08-26 02:46:24
+Date/Publication: 2016-10-30 01:01:48

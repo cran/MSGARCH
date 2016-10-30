@@ -40,16 +40,16 @@ If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} 
 If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
+sp500 = sp500[1:1000]
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
                            
 # run pred method in-sample     
 pred.its = MSGARCH::pred(object = fit, log = TRUE, do.its = TRUE)  
@@ -63,6 +63,5 @@ x = seq(-3,3,0.01)
 pred = MSGARCH::pred(object = fit, x = x, log = TRUE, do.its = FALSE)
 
 plot(pred)
-}
 }
 

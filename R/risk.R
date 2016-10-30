@@ -24,26 +24,25 @@
 #' The \code{MSGARCH_RISK} contains the \code{plot} method. 
 #' The Bayesian risk estimator can take long time to calculate depending on the size of the chain.
 #' @examples 
-#'\dontrun{
 #'# load data
 #'data("sp500")
+#'sp500 = sp500[1:1000]
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
 #'
 #'# fit the model on the data with ML estimation using DEoptim intialization
 #' set.seed(123)
-#'fit = MSGARCH::fit.mle(spec = spec, y = sp500)
+#'fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 #' 
 #'# compute the Value-at-Risk and Expected-shortfall 
 #'# Risk estimation in-sample 
-#'risk.its = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, do.its = TRUE)
+#'risk.its = MSGARCH::risk(object = fit, level = 0.95, ES = FALSE, do.its = TRUE)
 #'
 #'plot(risk.its)                     
 #'
 #'# Risk estimation at T + 1                     
-#'risk = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, do.its = FALSE)
-#'}
+#'risk = MSGARCH::risk(object = fit, level = 0.95, ES = FALSE, do.its = FALSE)
 #' @importFrom stats integrate sd uniroot                    
 #' @export
 risk <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE, do.its = FALSE) {
@@ -53,7 +52,9 @@ risk <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE, do.its = FA
 #' @export
 risk.MSGARCH_SPEC <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE,
   do.its = FALSE) {
-  y <- c(0, y)
+  if(isTRUE(do.its)){
+    y <- c(mean(y), y)
+  }
   y <- f.check.y(y)
   out <- list()
   ny <- nrow(y)

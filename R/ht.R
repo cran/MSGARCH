@@ -1,5 +1,5 @@
-#' Conditional volatility in each regime.
-#' @description Method returning the conditional volatility of each regime.
+#' Conditional variance in each regime.
+#' @description Method returning the conditional variance of each regime.
 #' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 #' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 #' created with \code{\link{fit.bayes}}.
@@ -7,9 +7,9 @@
 #' @param y  Vector (of size T) of observations (not require when using a fit object).
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 #' @examples 
-#'\dontrun{
 #'# load data
 #'data("sp500")
+#'sp500 = sp500[1:1000]
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
@@ -18,12 +18,11 @@
 #' set.seed(123)
 #' fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #'
-#'# Compute the conditional volatility
+#'# Compute the conditional variance
 #'ht = MSGARCH::ht(object = fit)
 #'
 #'plot(ht)
-#'}
-#' @return Condititional volatility time serie (array of size (T + 1) x M x K) in each regime.
+#' @return Condititional variance (array of size (T + 1) x M x K) in each regime.
 #' @export
 ht <- function(object, theta, y) {
   UseMethod("ht", object)
@@ -36,7 +35,6 @@ ht.MSGARCH_SPEC <- function(object, theta, y) {
   theta <- f.check.theta(object, theta)
   out <- object$rcpp.func$calc_ht(theta, y)
   class(out) <- "MSGARCH_HT"
-  out <- sqrt(out)
   return(out)
 }
 

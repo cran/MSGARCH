@@ -6,8 +6,13 @@ f.error <- function(message) {
 
 #Default parameters
 f.process.ctr <- function(ctr = list()) {
-  con <- list(theta0 = NULL, do.init = TRUE, N.mcmc = 10000, N.burn = 5000, N.thin = 10,
-    NP = 500, itermax = 500, do.enhance.theta0 = TRUE)
+  if(is.null(ctr$theta0)  && is.null(ctr$do.enhance.theta0)){
+    do.enhance.theta0 = TRUE
+  } else {
+    do.enhance.theta0 = FALSE
+  }
+  con <- list(theta0 = NULL, do.init = FALSE, N.mcmc = 1000, N.burn = 500, N.thin = 1,
+    NP = 500, itermax = 500, do.enhance.theta0 = do.enhance.theta0)
   con[names(ctr)] <- ctr
   return(con)
 }
@@ -64,7 +69,7 @@ f.check.theta <- function(spec, theta) {
   }
   return(theta)
 }
-
+# 
 #Function that sorts the theta according to the unconditional variance (Used for Bayesian estimation)
 f.sort.theta <- function(spec, theta) {
   thetaUncVol <- theta
@@ -106,23 +111,25 @@ f.sort.theta <- function(spec, theta) {
     }
   }
   if (!isTRUE(spec$is.mix)) {
-    p <- matrix(nrow = Nmodel, ncol = Nmodel)
-    for (i in 1:(Nmodel - 1)) {
-      p[i, 1:Nmodel] <- tmp[(params_loc[Nmodel + 1] + 1):(params_loc[Nmodel + 1] + Nmodel)]
-    }
-    p[Nmodel, ] <- 1 - colSums(matrix(p[1:(Nmodel - 1), ], ncol = Nmodel))
-    tmpp <- p
-    for (i in 1:(Nmodel)) {
-      for (j in 1:(Nmodel)) {
-        tmpp[i, j] <- p[postmp[i], postmp[j]]
+      p <- matrix(nrow = Nmodel, ncol = Nmodel)
+      for (i in 0:(Nmodel-1)) {
+        
+        p[1:(Nmodel-1),i+1] <- theta[(params_loc[Nmodel + 1] + Nmodel*i+1-i):(params_loc[Nmodel + 1] + Nmodel*i+Nmodel-1-i)]
+        
       }
-    }
+      p[Nmodel, ] <- 1 - colSums(matrix(p[1:(Nmodel-1), ], ncol = Nmodel))
+      tmpp <- p
+      for (i in 1:(Nmodel)) {
+        for (j in 1:(Nmodel)) {
+        tmpp[i, j] <- p[postmp[i], postmp[j]]
+        }
+      }
     new.p <- as.vector(tmpp[1:(Nmodel - 1), ])
     tmp[(params_loc[Nmodel + 1] + 1):length(tmp)] <- new.p
   } else {
     p <- rep(0, Nmodel)
     for (i in 1:(Nmodel - 1)) {
-      p[i] <- tmp[(params_loc[Nmodel + 1] + 1)]
+      p[i] <- tmp[(params_loc[Nmodel + 1] + i)]
     }
     p[Nmodel] <- 1 - sum(p)
     tmpp <- p
@@ -151,30 +158,36 @@ f.enhance.theta <- function(spec, theta, y) {
     vol[i] <- sqrt(var(y[sep[i]:sep[i + 1]]))
   }
   vol.goal <- quantile(vol, prob = seq(0.1, 0.9, length.out = K))
-  pos <- c(1, cumsum(spec$n.params) + 1)
-  if (isTRUE(spec$is.shape.ind)) {
-    theta <- spec$func$f.do.shape.ind(theta)
+  if(isTRUE(spec$is.shape.ind)){
+    pos <- c(1, cumsum(spec$n.params.vol) + 1)
+    pos[length(pos)] =  pos[length(pos)] + 1
+  } else{
+    pos <- c(1, cumsum(spec$n.params) + 1)
   }
-  if (isTRUE(spec$is.mix)) {
-    theta <- spec$func$f.do.mix(theta)
-  }
+  
+  # if (isTRUE(spec$is.shape.ind)) {
+  #   theta <- spec$func$f.do.shape.ind(theta)
+  # }
+  # if (isTRUE(spec$is.mix)) {
+  #   theta <- spec$func$f.do.mix(theta)
+  # }
   for (i in 1:K) {
     f.fun <- function(x) {
       theta.try <- theta
       theta.try[, pos[i]] <- x
-      if (isTRUE(spec$is.shape.ind)) {
-        theta.try <- spec$func$f.do.shape.ind.reverse(theta.try)
-      }
-      if (isTRUE(spec$is.mix)) {
-        theta.try <- spec$func$f.do.mix.reverse(theta.try)
-      }
-      unc.vol <- MSGARCH::unc.vol(spec, theta = theta.try)
-      if (isTRUE(spec$is.shape.ind)) {
-        theta.try <- spec$func$f.do.shape.ind(theta.try)
-      }
-      if (isTRUE(spec$is.mix)) {
-        theta.try <- spec$func$f.do.mix(theta.try)
-      }
+      # if (isTRUE(spec$is.shape.ind)) {
+      #   theta.try <- spec$func$f.do.shape.ind.reverse(theta.try)
+      # }
+      # if (isTRUE(spec$is.mix)) {
+      #   theta.try <- spec$func$f.do.mix.reverse(theta.try)
+      # }
+      unc.vol <- MSGARCH::unc.vol(object = spec,theta.try)
+      # if (isTRUE(spec$is.shape.ind)) {
+      #   theta.try <- spec$func$f.do.shape.ind(theta.try)
+      # }
+      # if (isTRUE(spec$is.mix)) {
+      #   theta.try <- spec$func$f.do.mix(theta.try)
+      # }
       return(unc.vol[i] - vol.goal[i])
     }
     theta[, pos[i]] <- uniroot(f.fun, lower = spec$lower[pos[i]], upper = spec$upper[pos[i]])$root
@@ -185,15 +198,16 @@ f.enhance.theta <- function(spec, theta, y) {
       theta[pos:length(theta)] <- (1 - 0.8) / (K - 1)
       for (i in 1:(K - 1)) {
         theta[pos] <- 0.8
-        pos <- pos + K + 1
+        pos <- pos + K 
       }
     }
   }
-  if (isTRUE(spec$is.shape.ind)) {
-    theta <- spec$func$f.do.shape.ind.reverse(theta)
-  }
-  if (isTRUE(spec$is.mix)) {
-    theta <- spec$func$f.do.mix.reverse(theta)
-  }
+  
+  # if (isTRUE(spec$is.shape.ind)) {
+  #   theta <- spec$func$f.do.shape.ind.reverse(theta)
+  # }
+  # if (isTRUE(spec$is.mix)) {
+  #   theta <- spec$func$f.do.mix.reverse(theta)
+  # }
   return(theta)
 }

@@ -12,16 +12,16 @@
 #' If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
 #' If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 #' @examples 
-#'\dontrun{
 #'# load data
 #'data("sp500")
+#'sp500 = sp500[1:1000]
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
 #'
 #'# fit the model on the data with ML estimation using DEoptim intialization
 #' set.seed(123)
-#'fit = MSGARCH::fit.mle(spec = spec, y = sp500)
+#'fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 #'                            
 #'# run pred method in-sample     
 #'pred.its = MSGARCH::pred(object = fit, log = TRUE, do.its = TRUE)  
@@ -35,7 +35,6 @@
 #'pred = MSGARCH::pred(object = fit, x = x, log = TRUE, do.its = FALSE)
 #'
 #'plot(pred)
-#'}
 #' @return A list of class \code{MSGARCH_PRED} containing two components:
 #' \itemize{
 #' \item \code{pred}:\cr If \code{do.its = FALSE}: (Log-)Predictive of of the points \code{x} at \code{t = T + 1} (vector of size N). \cr
@@ -64,7 +63,7 @@ pred.MSGARCH_SPEC <- function(object, x = NULL, theta, y, log = TRUE, do.its = F
     tmp[i, ] <- MSGARCH::pdf(object, x, theta = theta[i, ], y = y, log = FALSE,
                             do.its = do.its)$pdf
   }
-  tmp <- colMeans(tmp)
+  tmp <- colMeans(tmp, na.rm = TRUE)
   if (log) {
     tmp <- log(tmp)
   }
