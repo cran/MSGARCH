@@ -38,10 +38,10 @@ kernel <- function(object, theta, y, log = TRUE) {
 }
 
 #' @export
-kernel.MSGARCH_SPEC <- function(object, theta, y, log = TRUE) {
-  y <- f.check.y(y)
+kernel.MSGARCH_SPEC <- function(object, theta, y = NULL, log = TRUE) {
+  y     <- f.check.y(y)
   theta <- f.check.theta(object, theta)
-  lnd <- object$rcpp.func$eval_model(theta, y)
+  lnd   <- object$rcpp.func$eval_model(theta, y)
   lnd[is.na(lnd) | is.nan(lnd) | is.infinite(lnd)] <- -1e+10
   if (!log)
     lnd <- exp(lnd)

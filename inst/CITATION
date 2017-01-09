@@ -6,15 +6,27 @@ citHeader("To cite 'MSGARCH' in publications use:")
 
 citEntry(entry = "manual",
 	 title = "{M}arkov-{S}witching {GARCH} Models in {R}: The {MSGARCH} Package",
-	 author = personList(person("Keven","Bluteau"),
-                             person("David","Ardia"),
-                             person("Denis-Alexandre","Trottier"),
-							 person("Kris","Boudt"),
-							 person("Brian","Peterson")),
+	 author = personList(person("David","Ardia"),
+                             person("Keven","Bluteau"),
+                             person("Kris","Boudt"),
+                             person("Brian","Peterson"),
+                             person("Denis-Alexandre","Trottier")),
 	 url = "https://github.com/keblu/MSGARCH",
 	 year = year,
 	 vers = vers,
 	 textVersion =
-         paste("Keven Bluteau, David Ardia, Denis-Alexandre Trottier, Kris Boudt, Brian Peterson (", year,"). ",
+         paste("David Ardia, Keven Bluteau, Kris Boudt, Brian Peterson, Denis-Alexandre Trottier (", year,"). ",
                "Markov-Switching GARCH Models in R: The MSGARCH Package. ", vers, ".", sep = "")
+)
+
+
+citEntry(entry = "Misc",
+  author = personList(person("David","Ardia"), person("Keven","Bluteau"), person("Kris","Boudt"), person("Denis-Alexandre","Trottier")),
+  title = "Markov-Switching {GARCH} Models in {R}: {T}he {MSGARCH} Package",
+  year = "2016",
+  note = "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2845809",
+  textVersion = paste(
+                "Ardia, David and Bluteau, Keven and Boudt, Kris and Trottier, Denis-Alexandre (2016).",
+                "Markov-Switching GARCH Models in R: The MSGARCH Package.",
+                "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2845809/")
 )

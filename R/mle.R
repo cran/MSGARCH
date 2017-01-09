@@ -8,6 +8,7 @@
 #'        \item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (Default: \code{do.init = FALSE})
 #'        \item \code{NP} : Number of parameter vectors in the population in \code{DEoptim} optimization. (Default: \code{NP = 200})
 #'        \item \code{itermax} : Maximum iteration (population generation) allowed in \code{DEoptim} optimization. (Default: \code{maxit = 200})
+#'        \item \code{theta0} : Starting value for the chain (if empty the specification default value are used).
 #'        \item \code{do.enhance.theta0} : Boolean indicating if the default parameters value are enhance using \code{y} variance. (Default: \code{do.enhance.theta0 = TRUE})
 #'        }
 #' @return A list of class \code{MSGARCH_MLE_FIT} containing five components:
@@ -69,23 +70,28 @@ fit.mle <- function(spec, y, ctr = list()) {
 fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
   y <- f.check.y(y)
   ctr <- f.process.ctr(ctr)
-  if (isTRUE(ctr$do.enhance.theta0)) {
-    theta0.init <- f.enhance.theta(spec = spec, theta = spec$theta0, y = y)
-  } else {
-    theta0.init <- spec$theta0
+  
+  if (is.null(ctr$theta0)) {
+    ctr$theta0 <- spec$theta0
   }
+  if (isTRUE(ctr$do.enhance.theta0)) {
+    ctr$theta0 <- f.enhance.theta(spec = spec, theta = ctr$theta0, y = y)
+  }
+  theta0.init <- ctr$theta0
   lower <- spec$lower
   upper <- spec$upper
   if (any(ctr$do.init || spec$do.init)) {
-    pop = matrix(runif(length(lower)*10000, min = lower, max = upper), ncol = length(spec$theta0), byrow = TRUE)
-    pop_inv = t(replicate(n = 10000,upper)) +  t(replicate(n = 10000,lower)) - pop
-    total_pop = rbind(pop,pop_inv)
-    likelihood = MSGARCH::kernel(object = spec,theta = total_pop, y = y)
-    ind = sort(likelihood, decreasing = TRUE, index.return = TRUE)
+    pop        = matrix(runif(length(lower)*10000, min = lower, max = upper), ncol = length(spec$theta0), byrow = TRUE)
+    pop_inv    = t(replicate(n = 10000, upper)) +  t(replicate(n = 10000, lower)) - pop
+    total_pop  = rbind(pop,pop_inv)
+    # DA fix naming to loglik
+    likelihood = MSGARCH::kernel(object = spec,theta = total_pop, y = y, log = TRUE)
+    ind        = sort(likelihood, decreasing = TRUE, index.return = TRUE)
     initialpop = total_pop[ind$ix[1:ctr$NP], ]
   }
   f.kernel <- function(x, log = TRUE) {
-    return(MSGARCH::kernel(spec, x, y = y, log = log))
+    out = MSGARCH::kernel(spec, x, y = y, log = log)
+    return(out)
   }
   f.nll <- function(x) -f.kernel(x, log = TRUE)
   if (any(ctr$do.init || spec$do.init)) {
@@ -107,13 +113,15 @@ fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
                         inequb = spec$inequb)
   log_kernel <- f.kernel(theta)
   if (log_kernel == -1e+10) {
-    tmp <- DEoptim::DEoptim(fn = f.nll, lower = lower, upper = upper, control = ctr.deoptim)
-    theta <- tmp$optim$bestmem
-    log_kernel <- f.kernel(theta)
+    str = "f.find.theta0 -> DEoptim initialization"
+    ctr.deoptim <- DEoptim::DEoptim.control(NP = ctr$NP, itermax = ctr$itermax, trace = FALSE)
+    tmp         <- DEoptim::DEoptim(fn = f.nll, lower = lower, upper = upper, control = ctr.deoptim)
+    theta       <- tmp$optim$bestmem
+    log_kernel  <- f.kernel(theta)
   }
-  theta = f.sort.theta(spec = spec, theta)
-  theta0.init = f.sort.theta(spec = spec, theta0.init)
-  theta <- matrix(theta, ncol = length(theta))
+  theta       <- f.sort.theta(spec = spec, theta)
+  theta0.init <- f.sort.theta(spec = spec, theta0.init)
+  theta       <- matrix(theta, ncol = length(theta))
   colnames(theta) <- colnames(spec$theta0)
   out <- list( theta = theta, log_kernel = log_kernel, spec = spec,
               is.init = any(ctr$do.init || spec$do.init), y = y,theta0.init = theta0.init)

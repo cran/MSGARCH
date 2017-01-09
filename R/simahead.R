@@ -41,7 +41,7 @@ simahead <- function(object, n, m, theta, y) {
 }
 
 #' @export
-simahead.MSGARCH_SPEC <- function(object, n, m, theta, y) {
+simahead.MSGARCH_SPEC <- function(object, n, m, theta = NULL, y = NULL) {
   y <- f.check.y(y)
   theta <- f.check.theta(object, theta)
   if (nrow(theta) == 1) {
@@ -62,8 +62,8 @@ simahead.MSGARCH_SPEC <- function(object, n, m, theta, y) {
     }
   }
   out <- list()
-  out$draws <- draws
-  out$state <- state
+  out$draws  <- draws
+  out$state  <- state
   class(out) <- "MSGARCH_SIM"
   return(out)
 }
