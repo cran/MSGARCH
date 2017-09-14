@@ -1,0 +1,93 @@
+#' @title Unconditional volatility.
+#' @description Method returning the unconditional volatility of the
+#' process in each state and for the overall process..
+#' @param object Model specification of class \code{MSGARCH_SPEC}
+#' created with \code{\link{CreateSpec}} or fit object of type \code{MSGARCH_ML_FIT}
+#' created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
+#' created with \code{\link{FitMCMC}}.
+#' @param par Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter
+#' estimates where d must have
+#' the same length as the default parameters of the specification.
+#' @param ... Not used. Other arguments to \code{TransMat}.
+#' @param ctr A list of control parameters:
+#'        \itemize{
+#'        \item \code{n.sim} (integer >= 0) :
+#'        Number indicating the number of simulation done for estimation of the
+#'        unconditional volatility. (Default: \code{n.sim = 250L})
+#'        \item \code{n.ahead} (integer >= 0) :
+#'        Number indicating the number of step ahead performs to estimate the
+#'        unconditional volatility .(Default: \code{n.ahead = 5000L})
+#'        \item \code{n.burn} (integer >= 0) :
+#'        Number indicating the number of discarded step ahead to estimate the
+#'        unconditional volatility. (Default: \code{n.burn = 1000L})
+#'        }
+#' @return A \code{scalar} corresponding to the process unconditional volatility.
+#' @details If a matrix of MCMC posterior draws is given, the
+#' Bayesian unconditional volatility are calculated.
+#'  The unconditional volatility is estimated by first simulating \code{n.sim}
+#'  paths up to \code{n.burn + n.ahead},
+#'  calculating a forecast of the conditional volatility at each step ahead,
+#'  discarding the first \code{n.burn} step ahead conditional volatilities forecasts,
+#'  and computing the mean of the remaining \code{n.ahead - n.burn} conditional
+#'  volatilites forecasts. This method is based on the fact that
+#'  the conditional volatility forecast will converge to the unconditional volatilty
+#'  the further the forecast his from the starting point.
+#'  We take the average as a way to remove the noise that comes with the simulation process.
+#'  Overall, this method allows to compute the unconditional volatilty of arbitrarily complex models.
+#' @examples
+#' # create model specification
+#' # MS(2)-GARCH(1,1)-Normal (default)
+#' spec <- CreateSpec()
+#'
+#' # compute the unconditional volatility of each regime and the overall process
+#' \dontrun{
+#'   par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
+#'   UncVol(object = spec, par = par)
+#' }
+#' @export
+UncVol <- function(object, ...) {
+  UseMethod(generic = "UncVol", object = object)
+}
+
+#' @rdname UncVol
+#' @export
+UncVol.MSGARCH_SPEC <- function(object, par = NULL, ctr = list(), ...) {
+  object <- f_check_spec(object)
+
+  if (is.vector(par)) {
+    par <- t(as.matrix(par))
+  }
+  if (nrow(par) == 1) {
+    ctr   <- f_process_ctr(ctr, type = 2)
+    n.sim <- ctr$n.sim
+  } else {
+    if(is.null(ctr$n.sim)){
+      n.sim = 1
+    } else {
+      n.sim = ctr$n.sim
+    }
+  }
+  ctr    <- f_process_ctr(ctr, type = 2)
+  tmp <- f_CondVol(object = object,
+                 par = par,
+                 data = c(1,1),
+                 do.its = FALSE,
+                 n.ahead = ctr$n.burn + ctr$n.ahead,
+                 ctr = list(n.sim = n.sim))$vol
+  out <- mean(tmp[ctr$n.burn:ctr$n.ahead])
+  return(out)
+}
+
+#' @rdname UncVol
+#' @export
+UncVol.MSGARCH_ML_FIT <- function(object, ctr = list(), ...) {
+  out <- UncVol(object = object$spec, par = object$par, ctr = ctr)
+  return(out)
+}
+
+#' @rdname UncVol
+#' @export
+UncVol.MSGARCH_MCMC_FIT <- function(object, ctr = list(), ...) {
+  out <- UncVol(object = object$spec, par = object$par, ctr = ctr)
+  return(out)
+}
