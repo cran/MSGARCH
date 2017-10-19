@@ -1,8 +1,8 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 1.1
-Date: 2017-09-14
+Version: 1.2
+Date: 2017-10-12
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com"),
              person("Keven", "Bluteau", role = c("aut", "cre"),
@@ -10,7 +10,7 @@ Authors@R: c(person("David", "Ardia", role = c("aut"),
              person("Kris", "Boudt", role = c("ctb"),
              email = "kris.boudt@vub.ac.be"),
              person("Leopoldo", "Catania", role = c("aut"),
-             email = "Leopoldo.Catania@uniroma2.it"),
+             email = "leopoldo.catania@econ.au.dk"),
              person("Brian", "Peterson", role = c("ctb"),
              email = "brian@braverock.com"),
              person("Denis-Alexandre", "Trottier", role = c("aut"),
@@ -22,17 +22,15 @@ Author: David Ardia [aut],
     Brian Peterson [ctb],
     Denis-Alexandre Trottier [aut]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
-Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or MCMC/Bayesian), simulate, and forecast various 
-  Markov-Switching GARCH models as described in Ardia et al. (2017) <https://ssrn.com/abstract=2845809>.
+Description: Fit (by Maximum Likelihood or MCMC/Bayesian), simulate, and forecast various Markov-Switching GARCH models as described in Ardia et al. (2017) <https://ssrn.com/abstract=2845809>.
 License: GPL (>= 2)
 BugReports: https://github.com/keblu/MSGARCH/issues
 URL: https://github.com/keblu/MSGARCH
-Imports: Rcpp, adaptMCMC, coda, methods, zoo, expm, fanplot, MASS,
-        numDeriv
+Imports: Rcpp, coda, methods, zoo, expm, fanplot, MASS, numDeriv
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: mcmc, testthat
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
-Packaged: 2017-09-14 15:39:20 UTC; Keven
+Packaged: 2017-10-15 22:25:46 UTC; Keven
 Repository: CRAN
-Date/Publication: 2017-09-14 16:10:11 UTC
+Date/Publication: 2017-10-19 21:21:07 UTC
