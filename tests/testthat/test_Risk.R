@@ -17,12 +17,12 @@ testthat::test_that("In Sample Risk", {
   exp.VaR <- c(-4.9667729046257314, -3.5094969664406950)
   exp.ES  <- c(-5.7302877512616339, -4.4191996116552694)
   
-  testthat::expect_true(max(abs(c(est.VaR, est.ES) - c(exp.VaR, exp.ES))) < tol)
+  testthat::expect_true(max(abs(cbind(est.VaR, est.ES) - c(exp.VaR, exp.ES))) < tol)
 })
 
 testthat::test_that("Out of sample Risk", {
   set.seed(1234)
-  est.Risk <- MSGARCH::Risk(object = spec, par = par, data = SMI, do.its = FALSE, n.ahead = 2)
+  est.Risk <- MSGARCH::Risk(object = spec, par = par, data = SMI, do.its = FALSE, nahead = 2)
   
   tol <- 0.05
   est.VaR <- est.Risk$VaR[, 1]
@@ -30,5 +30,5 @@ testthat::test_that("Out of sample Risk", {
   exp.VaR <- c(-2.4300333085258528, -2.4536175976412151)
   exp.ES  <- c(-2.1709270732079351, -2.2054183166214902 )
   
-  testthat::expect_true(max(abs(c(est.VaR, est.ES) - c(exp.VaR, exp.ES))) < tol)
+  testthat::expect_true(max(abs(cbind(est.VaR, est.ES) - c(exp.VaR, exp.ES))) < tol)
 })

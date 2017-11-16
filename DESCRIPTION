@@ -1,8 +1,8 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 1.3
-Date: 2017-10-25
+Version: 2.0
+Date: 2017-11-16
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com"),
              person("Keven", "Bluteau", role = c("aut", "cre"),
@@ -31,6 +31,6 @@ LinkingTo: Rcpp, RcppArmadillo
 Suggests: mcmc, testthat
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
-Packaged: 2017-10-26 18:34:20 UTC; Keven
+Packaged: 2017-11-16 09:55:24 UTC; Keven
 Repository: CRAN
-Date/Publication: 2017-10-26 20:42:30 UTC
+Date/Publication: 2017-11-16 12:25:18 UTC
