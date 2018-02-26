@@ -15,7 +15,7 @@
 #' @param do.its  Logical indicating if the in-sample PIT is returned. (Default: \code{do.its = FALSE})
 #' @param nahead  Scalar indicating the number of step-ahead evaluation.
 #' Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})
-#' @param do.cumulative logical indicating if the PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+#' @param do.cumulative Logical indicating if the PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
 #'  Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})
 #' @param ctr A list of control parameters:
 #'        \itemize{
@@ -44,12 +44,11 @@
 #' Finally if \code{x = NULL} the vector \code{data} is evaluated for sample evaluation of the PIT.\cr
 #' The \code{do.norm} argument transforms the PIT value into Normal variates so that normality test can be done.
 #' @examples
+#' # create model specification
+#' spec <- CreateSpec()
+#' 
 #' # load data
 #' data("SMI", package = "MSGARCH")
-#'
-#' # create model specification
-#' # MS(2)-GARCH(1,1)-Normal (default)
-#' spec <- CreateSpec()
 #'
 #' # fit the model on the data by ML
 #' fit <- FitML(spec = spec, data = SMI)
@@ -191,7 +190,7 @@ PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
 #' @rdname PIT
 #' @export
 PIT.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
-                               do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+                               do.norm = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
   data = c(object$data, newdata)
   if(is.ts(object$data)){
     if(is.null(newdata)){
@@ -202,14 +201,14 @@ PIT.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
     data = as.ts(data)
   }
   out <- PIT(object = object$spec, x = x, par = object$par, data = data,
-             do.norm = do.norm, do.its = do.its, nahead = nahead, ctr = ctr)
+             do.norm = do.norm, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative,  ctr = ctr)
   return(out)
 }
 
 #' @rdname PIT
 #' @export
 PIT.MSGARCH_MCMC_FIT <- function(object, x = NULL, newdata = NULL,
-                                 do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+                                 do.norm = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
   data = c(object$data, newdata)
   if(is.ts(object$data)){
     if(is.null(newdata)){
@@ -220,6 +219,6 @@ PIT.MSGARCH_MCMC_FIT <- function(object, x = NULL, newdata = NULL,
     data = as.ts(data)
   }
   out <- PIT(object = object$spec, x = x, par = object$par, data = data,
-             do.norm = do.norm, do.its = do.its, nahead = nahead, ctr = ctr)
+             do.norm = do.norm, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative,  ctr = ctr)
   return(out)
 }

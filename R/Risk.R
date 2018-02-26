@@ -16,8 +16,9 @@
 #' @param do.its  Logical indicating if the in-sample risk estimators are returned.
 #'  (Default: \code{do.its = FALSE}).  
 #' @param nahead  Scalar indicating the number of step-ahead evaluation. (Default: \code{nahead = 1L}). Not used when
-#' \code{do.its = TRUE} as it only return in-sample one-step ahead risk measures.
-#' @param do.cumulative logical indicating if the risk measures are computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+#' \code{do.its = TRUE} as it only returns in-sample one-step ahead risk measures.
+#' @param do.cumulative Logical indicating if the risk measures are computed on the 
+#' cumulative simulations (typically log-returns, as they can be aggregated).
 #'  Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})
 #' @param ctr A list of control parameters:
 #'        \itemize{
@@ -50,22 +51,34 @@
 #' are computed. \code{do.cumulative = TRUE} indicate the function to compute the risk meausre 
 #' over aggregated period up to \code{nahead} period using the \code{cumsum} function on the simulated data. 
 #' @examples
+#' # create specification
+#' spec <- CreateSpec()
+#' 
 #' # load data
 #' data("SMI", package = "MSGARCH")
-#'
-#' # create model specification
-#' # MS(2)-GARCH(1,1)-Normal (default)
-#' spec <- CreateSpec()
-#'
-#' # fit the model on the data with ML estimation
+#' 
+#' # risk from specification
+#' par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
+#' set.seed(1234)
+#' risk <- Risk(object = spec, par = par, data = SMI, nahead = 5L)
+#' head(risk)
+#' plot(risk)
+#' 
+#' # risk from ML fit
 #' fit <- FitML(spec = spec, data = SMI)
-#'
-#' # compute the Value-at-Risk and Expected-shortfall in-sample
-#' risk.its <- Risk(object = fit, alpha = 0.05, do.es = FALSE, do.its = TRUE)
-#' plot(risk.its)
-#'
-#' # compute the one-step ahead Value-at-Risk and Expected-shortfall out-of-sample
-#' Risk(object = fit, alpha = 0.05, do.es = FALSE, do.its = FALSE, nahead = 1L)
+#' set.seed(1234)
+#' risk <- Risk(object = fit, nahead = 5L)
+#' head(risk)
+#' plot(risk)
+#' 
+#' \dontrun{
+#' # risk from MCMC fit
+#' set.seed(1234)
+#' fit <- FitMCMC(spec = spec, data = SMI)
+#' risk <- Risk(object = fit, nahead = 5L)
+#' head(risk)
+#' plot(risk)
+#' }
 #' @importFrom stats integrate sd
 #' @export
 Risk <- function(object, ...) {
@@ -187,7 +200,7 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
 #' @rdname Risk
 #' @export
 Risk.MSGARCH_ML_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
-                                do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+                                do.es = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,  ctr = list(), ...) {
   data <- c(object$data, newdata)
   if(is.ts(object$data)){
     if(is.null(newdata)){
@@ -198,14 +211,14 @@ Risk.MSGARCH_ML_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
     data = as.ts(data)
   }
   out  <- Risk(object = object$spec, par = object$par, data = data, alpha = alpha,
-               do.es = do.es, do.its = do.its, nahead = nahead, ctr = ctr)
+               do.es = do.es, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative, ctr = ctr)
   return(out)
 }
 
 #' @rdname Risk
 #' @export
 Risk.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
-                                  do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+                                  do.es = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
   data <- c(object$data, newdata)
   if(is.ts(object$data)){
     if(is.null(newdata)){
@@ -216,6 +229,6 @@ Risk.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
     data = as.ts(data)
   }
   out  <- Risk(object = object$spec, par = object$par, data = data, alpha = alpha,
-               do.es = do.es, do.its = do.its, nahead = nahead, ctr = ctr)
+               do.es = do.es, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative, ctr = ctr)
   return(out)
 }

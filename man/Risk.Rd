@@ -14,10 +14,12 @@ Risk(object, ...)
   ctr = list(), ...)
 
 \method{Risk}{MSGARCH_ML_FIT}(object, newdata = NULL, alpha = c(0.01, 0.05),
-  do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
+  do.es = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
+  ctr = list(), ...)
 
 \method{Risk}{MSGARCH_MCMC_FIT}(object, newdata = NULL, alpha = c(0.01,
-  0.05), do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
+  0.05), do.es = TRUE, do.its = FALSE, nahead = 1L,
+  do.cumulative = FALSE, ctr = list(), ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}
@@ -37,7 +39,7 @@ the same length as the default parameters of the specification.}
 (Default: \code{alpha = c(0.01, 0.05)})}
 
 \item{nahead}{Scalar indicating the number of step-ahead evaluation. (Default: \code{nahead = 1L}). Not used when
-\code{do.its = TRUE} as it only return in-sample one-step ahead risk measures.}
+\code{do.its = TRUE} as it only returns in-sample one-step ahead risk measures.}
 
 \item{do.es}{Logical indicating if Expected-shortfall is also calculated.
 (Default: \code{do.es = TRUE})}
@@ -45,8 +47,9 @@ the same length as the default parameters of the specification.}
 \item{do.its}{Logical indicating if the in-sample risk estimators are returned.
 (Default: \code{do.its = FALSE}).}
 
-\item{do.cumulative}{logical indicating if the risk measures are computed on the cumulative simulations (typically log-returns, as they can be aggregated).
-Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
+\item{do.cumulative}{Logical indicating if the risk measures are computed on the 
+cumulative simulations (typically log-returns, as they can be aggregated).
+ Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
 
 \item{ctr}{A list of control parameters:
 \itemize{
@@ -88,20 +91,32 @@ are computed. \code{do.cumulative = TRUE} indicate the function to compute the r
 over aggregated period up to \code{nahead} period using the \code{cumsum} function on the simulated data.
 }
 \examples{
+# create specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
 
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
+# risk from specification
+par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
+set.seed(1234)
+risk <- Risk(object = spec, par = par, data = SMI, nahead = 5L)
+head(risk)
+plot(risk)
 
-# fit the model on the data with ML estimation
+# risk from ML fit
 fit <- FitML(spec = spec, data = SMI)
+set.seed(1234)
+risk <- Risk(object = fit, nahead = 5L)
+head(risk)
+plot(risk)
 
-# compute the Value-at-Risk and Expected-shortfall in-sample
-risk.its <- Risk(object = fit, alpha = 0.05, do.es = FALSE, do.its = TRUE)
-plot(risk.its)
-
-# compute the one-step ahead Value-at-Risk and Expected-shortfall out-of-sample
-Risk(object = fit, alpha = 0.05, do.es = FALSE, do.its = FALSE, nahead = 1L)
+\dontrun{
+# risk from MCMC fit
+set.seed(1234)
+fit <- FitMCMC(spec = spec, data = SMI)
+risk <- Risk(object = fit, nahead = 5L)
+head(risk)
+plot(risk)
+}
 }

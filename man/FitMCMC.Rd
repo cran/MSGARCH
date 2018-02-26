@@ -25,7 +25,7 @@ the method automatically set starting parameters; see *Details*).
 \item \code{nthin} (integer > 0): Thinning factor (every \code{nthin}
 draws are kept). (Default: \code{nthin = 10L})
 \item \code{do.sort} (bool): Logical indicating if the MCMC draws are post-sorted
- following Geweke (2007). By default,  \code{do.sort = TRUE}, such that the
+ following Geweke (2007). By default, \code{do.sort = TRUE}, such that the
  MCMC draws are ordered to ensure that unconditional variance is an 
  increasing function of the regime (identification constraint). If the user sets
   \code{do.sort = FALSE}, no sorting is imposed, and label switching can occur (see *Details*).
@@ -37,7 +37,7 @@ A list of class \code{MSGARCH_MCMC_FIT} with the following elements:
 \itemize{
 \item \code{par}: The MCMC chain (matrix from the \R package
 \code{coda} (Plummer et al., 2006) of size \code{nmcmc} / \code{nthin} x d).
-\item \code{accept}: Acceptation rate of the sampler.
+\item \code{accept}: Acceptance rate of the sampler.
 \item \code{spec}:  Model specification of class \code{MSGARCH_SPEC}
 created with \code{\link{CreateSpec}}.
 \item \code{data}:  Vector (of size T) of observations.
@@ -45,15 +45,15 @@ created with \code{\link{CreateSpec}}.
 }
 The \code{MSGARCH_MCMC_FIT} with the following methods:
 \itemize{
-\item \code{\link{DIC}}: Compute Deviance Information Criterion (DIC).
-\item \code{\link{Volatility}}: In-sample conditional volatility filterting of the overall process.
-\item \code{predict}: Forecast of the conditional volatility of the overall process.
-\item \code{\link{UncVol}}: Unconditional volatility in each regime and the overall process.
-\item \code{\link{PredPdf}}: Predictive method.
-\item \code{\link{PIT}}: Probability integral transform.
-\item \code{\link{Risk}}: Value-at-Risk And Expected-Shortfall methods.
-\item \code{simulate}: Simulation method.
-\item \code{\link{State}}: State probabilities methods.
+\item \code{\link{DIC}}: Deviance Information Criterion (DIC).
+\item \code{simulate}: Simulation.
+\item \code{\link{Volatility}}: In-sample conditional volatility.
+\item \code{predict}: Forecast of the conditional volatility (and predictive distribution).
+\item \code{\link{UncVol}}: Unconditional volatility.
+\item \code{\link{PredPdf}}: Predictive density (pdf).
+\item \code{\link{PIT}}: Probability Integral Transform.
+\item \code{\link{Risk}}: Value-at-Risk and Expected-Shortfall.
+\item \code{\link{State}}: State probabilities (smoothed, filtered, predictive, Viterbi).
 \item \code{\link{ExtractStateFit}}: Single-regime model extractor.
 \item \code{summary}: Summary of the fit.
 }
@@ -67,7 +67,7 @@ The total number of draws is equal to \code{nmcmc / nthin}.
 The MCMC/Bayesian estimation relies on an \pkg{Rcpp} implementation of the adaptive sampler of Vihola (2012). 
 The implementation is based on the R package \pkg{adaptMCMC} (Andreas, 2012).
 Starting values when \code{par0} is not provided are chosen automatically
-before sampling (see Ardia et al. (2016) for more details).\cr
+before sampling (see Ardia et al. (2017) for more details).\cr
 \code{SamplerFUN} allows for a custom sampler to be used. The function
 must take the form: \cr \code{function(f_posterior, data, spec, par0, ctr)}, \cr
 where  \code{f_posterior} is the function to optimize, \code{data} is
@@ -79,12 +79,11 @@ The custom sampler must output a matrix containing the MCMC chain. \cr
 When \code{do.sort = TRUE}, sorting of each MCMC draw conditional on the unconditional variance is done across homogeneous regime specification.\cr
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on the data by MCMC
 set.seed(123)
@@ -112,7 +111,7 @@ Andreas, S. (2012).
 \code{adaptMCMC}: Implementation of a generic adaptive Monte Carlo Markov chain sampler.
 \url{https://cran.r-project.org/package=adaptMCMC}
 
-Ardia, D. Bluteau, K. Boudt, K. Catania, L. & Trottier, D.-A. (2016).
+Ardia, D. Bluteau, K. Boudt, K. Catania, L. & Trottier, D.-A. (2017).
 Markov-switching GARCH models in \R: The MSGARCH package.
 \url{https://ssrn.com/abstract=2845809}
 
@@ -121,8 +120,8 @@ Interpretation and Inference in Mixture Models: Simple MCMC Works.
 \emph{Computational Statistics & Data Analysis}, 51(7), 3529-3550.
 
 MacDonald, I.L., Zucchini, W. (1997).
-Hidden Markov and other models for discrete-valued time series.
-\emph{CRC press}.
+\emph{Hidden Markov and other models for discrete-valued time series}.
+CRC press.
 
 Plummer, M. Best, N. Cowles, K. & Vines, K. (2006).
 \code{coda}: Convergence diagnosis and output analysis for MCMC.

@@ -14,10 +14,12 @@ PIT(object, ...)
   ctr = list(), ...)
 
 \method{PIT}{MSGARCH_ML_FIT}(object, x = NULL, newdata = NULL,
-  do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
+  do.norm = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
+  ctr = list(), ...)
 
 \method{PIT}{MSGARCH_MCMC_FIT}(object, x = NULL, newdata = NULL,
-  do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
+  do.norm = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
+  ctr = list(), ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}
@@ -42,7 +44,7 @@ into standard Normal variate. (Default: \code{do.norm = FALSE})}
 \item{nahead}{Scalar indicating the number of step-ahead evaluation.
 Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})}
 
-\item{do.cumulative}{logical indicating if the PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+\item{do.cumulative}{Logical indicating if the PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
 Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
 
 \item{ctr}{A list of control parameters:
@@ -82,12 +84,11 @@ Finally if \code{x = NULL} the vector \code{data} is evaluated for sample evalua
 The \code{do.norm} argument transforms the PIT value into Normal variates so that normality test can be done.
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on the data by ML
 fit <- FitML(spec = spec, data = SMI)

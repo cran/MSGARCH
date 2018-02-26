@@ -14,17 +14,19 @@ PredPdf(object, ...)
   ctr = list(), ...)
 
 \method{PredPdf}{MSGARCH_ML_FIT}(object, x = NULL, newdata = NULL,
-  log = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
+  log = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
+  ctr = list(), ...)
 
 \method{PredPdf}{MSGARCH_MCMC_FIT}(object, x = NULL, newdata = NULL,
-  log = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
+  log = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
+  ctr = list(), ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{CreateSpec}}
 or fit object of type \code{MSGARCH_ML_FIT} created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
 created with \code{\link{FitMCMC}}.}
 
-\item{...}{Not used. Other arguments to \code{Pred}.}
+\item{...}{Not used. Other arguments to \code{PredPdf}.}
 
 \item{x}{Vector (of size n). Used when \code{do.its = FALSE}.}
 
@@ -40,8 +42,9 @@ estimates where d must have the same length as the default parameters of the spe
 \item{nahead}{Scalar indicating the number of step-ahead evaluation.
 Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})}
 
-\item{do.cumulative}{logical indicating if predictive density is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
-Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
+\item{do.cumulative}{Logical indicating if predictive density is computed on the 
+cumulative simulations (typically log-returns, as they can be aggregated).
+ Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
 
 \item{ctr}{A list of control parameters:
 \itemize{
@@ -61,7 +64,7 @@ If \code{do.its = TRUE}: In-sample predictive of \code{data} if \code{x = NULL}
 (vector of size T + T*) or in-sample predictive of \code{x} (matrix of size (T + T*) x n).
 }
 \description{
-Method returning the predictive probability density.
+Method returning the predictive density (pdf).
 }
 \details{
 If a matrix of MCMC posterior draws is given, the Bayesian
@@ -73,15 +76,15 @@ If \code{do.its = FALSE}, the vector \code{x} are evaluated as \code{t = T + T* 
 realization.\cr
 If \code{do.its = TRUE} and  \code{x} is evaluated
 at each time \code{t} up top time \code{t = T + T*}.\cr
-Finally, if \code{x = NULL} the vector \code{data} is evaluated for sample evaluation of the predictive denisty ((log-)likelihood of each sample points).
+Finally, if \code{x = NULL} the vector \code{data} is evaluated for sample 
+evaluation of the predictive denisty ((log-)likelihood of each sample points).
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on the data by ML
 fit <- FitML(spec = spec, data = SMI)

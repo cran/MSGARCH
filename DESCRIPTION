@@ -1,8 +1,8 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 2.0
-Date: 2017-11-16
+Version: 2.1
+Date: 2018-02-26
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com"),
              person("Keven", "Bluteau", role = c("aut", "cre"),
@@ -16,11 +16,11 @@ Authors@R: c(person("David", "Ardia", role = c("aut"),
              person("Denis-Alexandre", "Trottier", role = c("aut"),
              email = "denis-alexandre.trottier.1@ulaval.ca"))
 Author: David Ardia [aut],
-    Keven Bluteau [aut, cre],
-    Kris Boudt [ctb],
-    Leopoldo Catania [aut],
-    Brian Peterson [ctb],
-    Denis-Alexandre Trottier [aut]
+  Keven Bluteau [aut, cre],
+  Kris Boudt [ctb],
+  Leopoldo Catania [aut],
+  Brian Peterson [ctb],
+  Denis-Alexandre Trottier [aut]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
 Description: Fit (by Maximum Likelihood or MCMC/Bayesian), simulate, and forecast various Markov-Switching GARCH models as described in Ardia et al. (2017) <https://ssrn.com/abstract=2845809>.
 License: GPL (>= 2)
@@ -31,6 +31,6 @@ LinkingTo: Rcpp, RcppArmadillo
 Suggests: mcmc, testthat
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
-Packaged: 2017-11-16 09:55:24 UTC; Keven
+Packaged: 2018-02-26 18:18:25 UTC; Keven
 Repository: CRAN
-Date/Publication: 2017-11-16 12:25:18 UTC
+Date/Publication: 2018-02-26 22:08:17 UTC

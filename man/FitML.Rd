@@ -45,16 +45,16 @@ A list of class \code{MSGARCH_ML_FIT} with the following elements:
        }
 The \code{MSGARCH_ML_FIT} with the following methods:
 \itemize{
-\item \code{AIC}: Compute Akaike information criterion (AIC).
-\item \code{BIC}: Compute Bayesian information criterion (BIC).
-\item \code{\link{Volatility}}: In-sample conditional volatility filterting of the overall process.
-\item \code{predict}: Forecast of the conditional volatility of the overall process.
-\item \code{\link{UncVol}}: Unconditional volatility in each regime and the overall process.
-\item \code{\link{PredPdf}}: Predictive method.
+\item \code{AIC}: Akaike Information Criterion (AIC).
+\item \code{BIC}: Bayesian Information Criterion (BIC).
+\item \code{simulate}: Simulation.
+\item \code{\link{Volatility}}: In-sample conditional volatility.
+\item \code{predict}: Forecast of the conditional volatility (and predictive distribution).
+\item \code{\link{UncVol}}: Unconditional volatility.
+\item \code{\link{PredPdf}}: Predictive density (pdf).
 \item \code{\link{PIT}}: Probability Integral Transform.
-\item \code{\link{Risk}}: Value-at-Risk and Expected-Shortfall methods.
-\item \code{simulate}: Simulation method.
-\item \code{\link{State}}: State probabilities methods.
+\item \code{\link{Risk}}: Value-at-Risk and Expected-Shortfall.
+\item \code{\link{State}}: State probabilities (smoothed, filtered, predictive, Viterbi).
 \item \code{\link{ExtractStateFit}}: Single-regime model extractor.
 \item \code{summary}: Summary of the fit.
 }
@@ -64,11 +64,11 @@ Method that performs Maximum Likelihood estimation
 of a \code{MSGARCH_SPEC} object on a set of observations.
 }
 \details{
-By default, \code{OptimFUN} is set such that optimization is done via the well known Broyden-
+By default, \code{OptimFUN} is set such that optimization is done via the well-known Broyden-
 Fletcher-Goldfarb-Shanno (BFGS) algorithm using the \code{optim} function with \code{method =
 "BFGS"}.
 Starting values when \code{par0} is not provided are chosen automatically
-before optimization (see Ardia et al. (2016) for more details)\cr
+before optimization (see Ardia et al. (2017) for more details)\cr
 \code{OptimFUN} allows for a custom optimizer to be used. The function must take
 the form: \cr \code{function(vPw, f_nll, spec, data, do.plm)}, \cr
 where \code{vPw} are starting parameters (transformed), \code{f_nll} is the function
@@ -83,12 +83,11 @@ It must output a list with the following elements:
 }
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on the data by ML
 fit <- FitML(spec = spec, data = SMI)

@@ -18,7 +18,7 @@ created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
 created with \code{\link{FitMCMC}}.}
 }
 \value{
-A list of with \code{K} element where each element is a fit object of type \code{MSGARCH_ML_FIT} or
+A list of \code{K} elements where each element is a fit object of type \code{MSGARCH_ML_FIT} or
 \code{MSGARCH_MCMC_FIT}.
 }
 \description{
@@ -26,14 +26,14 @@ Extracts each regime from a fitted multiple regime specificaton
 and creates a fitted object for each extracted regime.
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on the data with ML estimation
 fit <- FitML(spec = spec, data = SMI)
 SR.fit <- ExtractStateFit(fit)
+print(SR.fit)
 }
