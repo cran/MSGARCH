@@ -1,3 +1,4 @@
+#' @importFrom stats pnorm
 f_InferenceFun <- function(vPw, data, spec, do.plm, mNegHessian = NULL) {
   spec <- f_check_spec(spec)
   out  <- matrix(data = NA, nrow = length(vPw), ncol = 4L, dimnames = list(names(vPw), c("Estimate", "Std. Error",
@@ -39,7 +40,7 @@ f_InferenceFun <- function(vPw, data, spec, do.plm, mNegHessian = NULL) {
   vSE   <- sqrt(diag(mSandwitch))
   vTest <- vPn/vSE
   
-  vPvalues <- 1 - pnorm(abs(vTest))
+  vPvalues <- 1 - stats::pnorm(abs(vTest))
   
   out[, "Estimate"]   <- vPn
   out[, "Std. Error"] <- vSE
