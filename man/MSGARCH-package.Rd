@@ -28,6 +28,16 @@ further applications. \cr
 The authors acknowledge Google for financial support via the Google Summer of Code 2016 & 2017,
 the International Institute of Forecasters and Industrielle-Alliance.
 }
+\note{
+By using \pkg{MSGARCH} you agree to the following rules:
+\itemize{
+\item You must cite Ardia et al. (2019a) in working papers and published papers that use \pkg{MSGARCH}.
+Use \code{citation("MSGARCH")}.
+\item You must place the following URL in a footnote to help others find \pkg{MSGARCH}: 
+\url{https://CRAN.R-project.org/package=MSGARCH}.
+\item You assume all risk for the use of \pkg{MSGARCH}.
+}
+}
 \references{
 Ardia, D. Bluteau, K. Boudt, K. Catania, L. (2018).
 Forecasting risk with Markov-switching GARCH models: A large-scale performance study.
@@ -73,18 +83,18 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Keven Bluteau \email{Keven.Bluteau@unine.ch}
+\strong{Maintainer}: Keven Bluteau \email{Keven.Bluteau@hec.ca} (\href{https://orcid.org/0000-0003-2990-4807}{ORCID})
 
 Authors:
 \itemize{
-  \item David Ardia \email{david.ardia.ch@gmail.com}
-  \item Leopoldo Catania \email{leopoldo.catania@econ.au.dk}
+  \item David Ardia \email{david.ardia.ch@gmail.com} (\href{https://orcid.org/0000-0003-2823-782X}{ORCID})
+  \item Leopoldo Catania \email{leopoldo.catania@econ.au.dk} (\href{https://orcid.org/0000-0002-0981-1921}{ORCID})
   \item Denis-Alexandre Trottier \email{denis-alexandre.trottier.1@ulaval.ca}
 }
 
 Other contributors:
 \itemize{
-  \item Kris Boudt \email{kris.boudt@vub.ac.be} [contributor]
+  \item Kris Boudt \email{kris.boudt@ugent.be} (\href{https://orcid.org/0000-0002-1000-5142}{ORCID}) [contributor]
   \item Alexios Ghalanos \email{alexios@4dscape.com} [contributor]
   \item Brian Peterson \email{brian@braverock.com} [contributor]
 }

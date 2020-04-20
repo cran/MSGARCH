@@ -40,7 +40,7 @@ f_InferenceFun <- function(vPw, data, spec, do.plm, mNegHessian = NULL) {
   vSE   <- sqrt(diag(mSandwitch))
   vTest <- vPn/vSE
   
-  vPvalues <- 1 - stats::pnorm(abs(vTest))
+  vPvalues <- 1 - pnorm(abs(vTest))
   
   out[, "Estimate"]   <- vPn
   out[, "Std. Error"] <- vSE

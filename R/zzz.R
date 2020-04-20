@@ -19,12 +19,12 @@ loadModule("Ged", TRUE)
 #' @importFrom methods is
 .onAttach <- function(libname, pkgname){
   MSGARCH_env <- as.environment("package:MSGARCH")
-  assign(".norm_sym_created", new(Class = utils::getFromNamespace("norm_sym", ns = "MSGARCH")), envir = MSGARCH_env)
-  assign(".norm_skew_created", new(Class = utils::getFromNamespace("norm_skew", ns = "MSGARCH")), envir = MSGARCH_env)
-  assign(".std_sym_created", new(Class = utils::getFromNamespace("std_sym", ns = "MSGARCH")), envir = MSGARCH_env)
-  assign(".std_skew_created", new(Class = utils::getFromNamespace("std_skew", ns = "MSGARCH")), envir = MSGARCH_env)
-  assign(".ged_sym_created", new(Class = utils::getFromNamespace("ged_sym", ns = "MSGARCH")), envir = MSGARCH_env)
-  assign(".ged_skew_created", new(Class = utils::getFromNamespace("ged_skew", ns = "MSGARCH")), envir = MSGARCH_env)
+  assign(".norm_sym_created", new(Class = getFromNamespace("norm_sym", ns = "MSGARCH")), envir = MSGARCH_env)
+  assign(".norm_skew_created", new(Class = getFromNamespace("norm_skew", ns = "MSGARCH")), envir = MSGARCH_env)
+  assign(".std_sym_created", new(Class = getFromNamespace("std_sym", ns = "MSGARCH")), envir = MSGARCH_env)
+  assign(".std_skew_created", new(Class = getFromNamespace("std_skew", ns = "MSGARCH")), envir = MSGARCH_env)
+  assign(".ged_sym_created", new(Class = getFromNamespace("ged_sym", ns = "MSGARCH")), envir = MSGARCH_env)
+  assign(".ged_skew_created", new(Class = getFromNamespace("ged_skew", ns = "MSGARCH")), envir = MSGARCH_env)
   
 
 

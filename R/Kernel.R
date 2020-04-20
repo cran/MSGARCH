@@ -39,7 +39,7 @@
 #}
 
 # @export
-#' @importFrom stats dnorm
+#' @importFrom  stats dnorm
 Kernel <- function(object, par, data = NULL, log = TRUE, do.prior = FALSE) {
   object <- f_check_spec(object)
   data   <- f_check_y(data)
