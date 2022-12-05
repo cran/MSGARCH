@@ -1,8 +1,8 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 2.50
-Date: 2022-01-11
+Version: 2.51
+Date: 2022-12-05
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com",
 			 comment = c(ORCID = "0000-0003-2823-782X")),
@@ -32,7 +32,7 @@ Suggests: mcmc, testthat
 RoxygenNote: 7.1.1
 NeedsCompilation: yes
 Encoding: UTF-8
-Packaged: 2022-01-15 04:20:49 UTC; Keven
+Packaged: 2022-12-05 16:08:40 UTC; Keven
 Author: David Ardia [aut] (<https://orcid.org/0000-0003-2823-782X>),
   Keven Bluteau [aut, cre] (<https://orcid.org/0000-0003-2990-4807>),
   Kris Boudt [ctb] (<https://orcid.org/0000-0002-1000-5142>),
@@ -41,4 +41,4 @@ Author: David Ardia [aut] (<https://orcid.org/0000-0003-2823-782X>),
   Brian Peterson [ctb],
   Denis-Alexandre Trottier [aut]
 Repository: CRAN
-Date/Publication: 2022-01-16 00:22:41 UTC
+Date/Publication: 2022-12-05 18:32:30 UTC
